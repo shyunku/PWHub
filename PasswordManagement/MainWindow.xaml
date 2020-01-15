@@ -6,25 +6,20 @@
         xmlns:local="clr-namespace:PasswordManagement"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="션쿠의 비밀번호 관리자" Height="300" Width="500"
+        Title="션쿠의 비밀번호 관리자" Height="300" Width="550"
         Closing="Window_Closing">
     <Grid>
-        <Label Content="호스트 관리자님 환영합니다!" HorizontalAlignment="Center" Margin="0,40,0,0" 
+        <Label Content="PWHub" HorizontalAlignment="Center" Margin="90,32,78,0" 
                VerticalAlignment="Top" RenderTransformOrigin="0.151,0.5"
-               FontSize="25" FontWeight="Bold"/>
-        <Label Content="Root Password : " HorizontalAlignment="Left" Margin="78,125,0,0" 
-               VerticalAlignment="Top" FontWeight="Bold"/>
-        <PasswordBox Name="inputRootPassword" Height="23" Margin="185,129,78,0" 
-                     VerticalAlignment="Top"
-                     KeyDown="fastEnterLogin"/>
+               FontSize="35" FontWeight="Bold"/>
+        <Label Content="루트 패스워드 : " HorizontalAlignment="Left" Margin="70,120,0,0" VerticalAlignment="Top" FontSize="15"/>
+        <PasswordBox Name="inputRootPassword" Height="23" Margin="185,120,78,0" VerticalAlignment="Top" KeyDown="fastEnterLogin"/>
         <Button Content="접속" HorizontalAlignment="Center" 
-                Margin="0,202,0,0" VerticalAlignment="Top" Width="75" Height="25"
-                Click="login"/>
-        <Label Content="초기 비밀번호는 root입니다." HorizontalAlignment="Center" 
-               Margin="0,160,0,0" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontSize="11"
-               />
+                Margin="0,200,0,0" VerticalAlignment="Top" Width="90" Height="30"
+                Click="login" FontSize="15"/>
+        <!--<Label Content="초기 비밀번호는 root입니다." HorizontalAlignment="Center" Margin="0,170,0,0" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontSize="13"/>-->
         
-        <Label Content="[힌트] 없음" HorizontalAlignment="Center" Margin="0,95,0,0" VerticalAlignment="Top"
-               FontSize="11" Foreground="#FF00AC37" Name="rootPasswordHint"/>
+        <Label Content="[힌트] 초기 비밀번호는 root입니다." HorizontalAlignment="Center" Margin="0,155,0,0" VerticalAlignment="Top" FontSize="13" Foreground="#FF00AC37" Name="rootPasswordHint"/>
+        <Label Content="PWHub 0.0.0v by 션쿠" HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Bottom" FontSize="11" Name="versionInfo"/>
     </Grid>
 </Window>

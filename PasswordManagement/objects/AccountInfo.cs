@@ -82,6 +82,12 @@ namespace PasswordManagement
             return -1;
         }
 
+        public EncryptedKeyMap getEncryptedKeyMapById(String id)
+        {
+            int curIndex = getIndexOfKeyData(id);
+            return keyBundle[curIndex];
+        }
+
 
         public void viewed()
         {

@@ -31,6 +31,10 @@ namespace PasswordManagement
             datafile = fileManager.getCurrentValidDataFile();
             encryptedAccountId = accountId;
             encryptedKeyPairId = keyPairId;
+
+            EncryptedKeyMap keyInfo = datafile.getAccountInfo(accountId).getEncryptedKeyMapById(keyPairId);
+            newKeyName.Text = keyInfo.KeyTitle;
+            newKeyValue.Text = keyInfo.Value;
         }
 
         private void cancelThis(object sender, RoutedEventArgs e)

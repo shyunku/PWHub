@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:PasswordManagement"
         mc:Ignorable="d"
         SizeToContent="WidthAndHeight"
+        ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Title="새로운 계정 이름">
     <Grid Margin="15">

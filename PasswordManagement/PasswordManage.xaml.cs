@@ -109,7 +109,7 @@ namespace PasswordManagement
             accountListView.Items.Refresh();
 
             //계정 기본 정보 로드
-            selectedTitle.Content = sourceData.InfoTitle;
+            accountTitle.Content = "키 정보 - " + sourceData.InfoTitle;
             selectedInitialAdditionTimestamp.Content = sourceData.InitialAdditionTimestamp;
             selectedRecentUpdateTimestamp.Content = sourceData.RecentModifiedTimestamp;
             selectedViewCount.Content = sourceData.ViewCount + " 회";
@@ -161,7 +161,7 @@ namespace PasswordManagement
             slideDownBtn.IsEnabled = false;
 
             //정보 초기화
-            selectedTitle.Content = nothing;
+            accountTitle.Content = "키 정보";
             selectedInitialAdditionTimestamp.Content = nothing;
             selectedRecentUpdateTimestamp.Content = nothing;
             selectedViewCount.Content = nothing;

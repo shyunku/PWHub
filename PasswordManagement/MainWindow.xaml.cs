@@ -36,6 +36,7 @@ namespace PasswordManagement
             fileManager = new DatafileManager();
             datafile = fileManager.getCurrentValidDataFile();
             rootPasswordHint.Content = "[힌트] "+(datafile.RootPasswordHint == "" ? "없음" : datafile.RootPasswordHint);
+            versionInfo.Content = Utils.getDevelopmentInfo();
         }
 
         private void login(object sender, RoutedEventArgs e)

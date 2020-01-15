@@ -20,7 +20,7 @@ namespace PasswordManagement
         private static Regex numberRegex = new Regex(numberLetters);
 
         public static readonly String appName = "PWHub";
-        public static readonly String version = "0.9.2v";
+        public static readonly String version = "0.9.3v";
         public static readonly String developer = "션쿠";
         private static readonly DateTime InitialTimestampFlag = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         
@@ -40,11 +40,17 @@ namespace PasswordManagement
             return getDateTimeFormattedString(getCurrentTimeMillis());
         }
 
+        public static String getDevelopmentInfo()
+        {
+            return appName + " " + version + " by " + developer;
+        }
+
         public static String getDefaultWindowTitle()
         {
             return "[" + developer + "]" + appName + " " + version;
             //return appName + " " + version + " _" + developer;
         }
+
         //Long형 시간을 포매팅하여 리턴
         public static String getDateTimeFormattedString(long time)
         {
