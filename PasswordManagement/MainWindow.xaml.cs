@@ -35,7 +35,7 @@ namespace PasswordManagement
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             fileManager = new DatafileManager();
             datafile = fileManager.getCurrentValidDataFile();
-            rootPasswordHint.Content = "[힌트] "+(datafile.RootPasswordHint == "" ? "없음" : datafile.RootPasswordHint);
+            rootPasswordHint.Content = "[힌트] "+(datafile.RootPasswordHint == "" ? "초기 비밀번호는 root입니다." : datafile.RootPasswordHint);
             versionInfo.Content = Utils.getDevelopmentInfo();
         }
 

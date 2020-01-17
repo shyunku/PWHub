@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -289,6 +291,48 @@ namespace PasswordManagement
         {
             fileManager.saveFile();
             Environment.Exit(0);
+        }
+
+        private void ExportWholeData(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Title = "데이터 파일 내보내기";
+            saveFileDialog.Filter = "Data Files (*.dat)|*.dat";
+            saveFileDialog.ShowDialog();
+            
+            if(saveFileDialog.FileName != "")
+            {
+                fileManager.saveFile(saveFileDialog.FileName);
+            }
+        }
+
+        private void ImportToOverwriteData(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "새로운 데이터로 기존 파일 덮어쓰기";
+            openFileDialog.Filter = "Data Files (*.dat)|*.dat";
+            openFileDialog.ShowDialog();
+
+            if(openFileDialog.FileName != "")
+            {
+                MessageBoxResult result = MessageBox.Show("새로운 데이터로 덮어쓰시겠습니까?\n기존 데이터는 복구할 수 없습니다!",
+                    "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.Yes)
+                {
+                    fileManager.importData(openFileDialog.FileName);
+                    updateData();
+                    accountListView.ItemsSource = datafile.AccountTable;
+                    accountListView.Items.Refresh();
+                    itemUnselected();
+                }
+            }
+        }
+
+        private void ResetRootPassword(object sender, RoutedEventArgs e)
+        {
+            this.Hide();
+            RootPasswordSetting rootPasswordSetting = new RootPasswordSetting(fileManager);
+            rootPasswordSetting.ShowDialog();
         }
     }
 }

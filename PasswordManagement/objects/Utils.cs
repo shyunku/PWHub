@@ -20,7 +20,7 @@ namespace PasswordManagement
         private static Regex numberRegex = new Regex(numberLetters);
 
         public static readonly String appName = "PWHub";
-        public static readonly String version = "0.9.3v";
+        public static readonly String version = "0.10.0v";
         public static readonly String developer = "션쿠";
         private static readonly DateTime InitialTimestampFlag = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         

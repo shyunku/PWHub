@@ -68,6 +68,25 @@ namespace PasswordManagement
             }
         }
 
+        public void saveFile(String filepathName)
+        {
+            try
+            {
+                FileStream fileStream = new FileStream(filepathName, FileMode.Create);
+                BinaryWriter writer = new BinaryWriter(fileStream);
+                String buffer = JsonConvert.SerializeObject(this.datafile, Formatting.Indented);
+                String encrypted = StringSecure.superEncrypt(buffer);
+                writer.Write(encrypted);
+                writer.Close();
+                fileStream.Close();
+                Utils.log("Data saved to "+filepathName);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
         public void loadFile()
         {
             try
@@ -80,6 +99,26 @@ namespace PasswordManagement
                 fileStream.Close();
                 Utils.log("Data loaded!");
                 this.datafile = JsonConvert.DeserializeObject<EncryptedDatafile>(decrypted);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+        public void importData(String filepathName)
+        {
+            try
+            {
+                FileStream fileStream = new FileStream(filepathName, FileMode.Open);
+                BinaryReader reader = new BinaryReader(fileStream);
+                String buffer = reader.ReadString();
+                String decrypted = StringSecure.superDecrypt(buffer);
+                reader.Close();
+                fileStream.Close();
+                Utils.log("Data loaded from "+filepathName);
+                this.datafile = JsonConvert.DeserializeObject<EncryptedDatafile>(decrypted);
+                saveFile();
             }
             catch (Exception e)
             {

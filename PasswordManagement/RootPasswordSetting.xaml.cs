@@ -66,7 +66,8 @@ namespace PasswordManagement
                     datafile.registerNewPasswordHint(newPasswordHintInput.Text);
                     fileManager.saveFile();
                     this.Hide();
-                    App.Current.MainWindow.Show();
+                    MainWindow mainWindow = new MainWindow();
+                    mainWindow.Show();
                     MessageBox.Show("새로운 비밀번호로 다시 로그인하시기 바랍니다.");
                 }
             }
