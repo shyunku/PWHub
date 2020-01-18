@@ -103,10 +103,19 @@ namespace PasswordManagement
         //계정 클릭 이벤트
         private void LightClick(object sender, MouseButtonEventArgs e)
         {
-            itemSelected();
+            accountListView.ItemsSource = datafile.AccountTable;
+            accountListView.Items.Refresh();
 
+            //재선택으로 취소된 경우 고려
+            Console.WriteLine(accountListView.SelectedIndex);
+            if (accountListView.SelectedIndex == -1)
+            {
+                deselect();
+                return;
+            }
+
+            itemSelected();
             AccountInfo sourceData = (AccountInfo)accountListView.SelectedItem;
-            if (sourceData == null) return;
 
             //계정 키페어 리스트 업데이트
             accountKeyValueView.ItemsSource = sourceData.KeyBundle;
@@ -116,15 +125,13 @@ namespace PasswordManagement
                 datafile.viewedInfo(sourceData.ID_key);
                 previousSelectedAccountId = sourceData.ID_key;
             }
-            
-            accountListView.ItemsSource = datafile.AccountTable;
-            accountListView.Items.Refresh();
 
             //계정 기본 정보 로드
             accountTitle.Content = "키 정보 - " + sourceData.InfoTitle;
             selectedInitialAdditionTimestamp.Content = sourceData.InitialAdditionTimestamp;
             selectedRecentUpdateTimestamp.Content = sourceData.RecentModifiedTimestamp;
             selectedViewCount.Content = sourceData.ViewCount + " 회";
+            Console.WriteLine(accountListView.SelectedIndex);
 
             infoItemUnselected();
         }
@@ -392,5 +399,6 @@ namespace PasswordManagement
             RootPasswordSetting rootPasswordSetting = new RootPasswordSetting(fileManager);
             rootPasswordSetting.ShowDialog();
         }
+
     }
 }
