@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
 using Newtonsoft.Json;
+using System.Windows;
 
 namespace PasswordManagement
 {
@@ -48,6 +49,11 @@ namespace PasswordManagement
 
         public void addKeyPair(String key, String value)
         {
+            if (isExist(key))
+            {
+                MessageBox.Show("해당 키 이름은 사용 중입니다!", "키 중복 오류");
+                return;
+            }
             keyBundle.Add(new EncryptedKeyMap(key, value, keyBundle.Count+1));
             revalidateIndex();
         }
@@ -88,6 +94,20 @@ namespace PasswordManagement
             return keyBundle[curIndex];
         }
 
+        public bool isExist(String title)
+        {
+            for (int i = 0; i < keyBundle.Count; i++)
+            {
+                EncryptedKeyMap cur = keyBundle[i];
+                if (cur.KeyTitle.Equals(title))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+
+        }
 
         public void viewed()
         {

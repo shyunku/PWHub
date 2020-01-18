@@ -24,8 +24,6 @@ namespace PasswordManagement
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool shown_;
-
         private DatafileManager fileManager;
         private EncryptedDatafile datafile;
         public MainWindow()
@@ -83,15 +81,6 @@ namespace PasswordManagement
         {
             fileManager.saveFile();
             Environment.Exit(0);
-        }
-
-        protected override void OnContentRendered(EventArgs e)
-        {
-            base.OnContentRendered(e);
-            if (shown_) return;
-            shown_ = true;
-            fileManager = new DatafileManager();
-            datafile = fileManager.getCurrentValidDataFile();
         }
     }
 }

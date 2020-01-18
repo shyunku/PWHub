@@ -63,7 +63,7 @@ namespace PasswordManagement
         //계정 정보 삭제
         private void DeleteAccountClick(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Delete this account information? This can't be undone!",
+            MessageBoxResult result = MessageBox.Show("이 계정 정보를 삭제하시겠습니까?\n 내부의 모든 키페어가 삭제되며, 이 작업은 복구될 수 없습니다!",
                 "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result == MessageBoxResult.Yes)
             {
@@ -149,6 +149,7 @@ namespace PasswordManagement
             AccountInfo sourceData = (AccountInfo)accountListView.SelectedItem;
             if (sourceData == null) return;
             addKeyPairBtn.IsEnabled = true;
+            addGeneralKeyPairBtn.IsEnabled = true;
             updateMoveItemEnableProperty(sourceData.ID_key);
         }
 
@@ -157,6 +158,7 @@ namespace PasswordManagement
         {
             const String nothing = "N/A";
             addKeyPairBtn.IsEnabled = false;
+            addGeneralKeyPairBtn.IsEnabled = false;
             deleteAccountBtn.IsEnabled = false;
             modifyAccountBtn.IsEnabled = false;
             slideUpBtn.IsEnabled = false;
@@ -193,6 +195,29 @@ namespace PasswordManagement
             modifyKeyPairBtn.IsEnabled = true;
         }
 
+        //기본키값 추가
+        private void AddGeneralKeyValue(object sender, RoutedEventArgs e)
+        {
+            AccountInfo sourceData = (AccountInfo)accountListView.SelectedItem;
+            if (sourceData == null) return;
+            //아이디 추가
+            if (!datafile.getAccountInfo(sourceData.ID_key).isExist("아이디"))
+            {
+                datafile.getAccountInfo(sourceData.ID_key).addKeyPair("아이디", "-");
+            }
+            //비번 추가
+            if (!(datafile.getAccountInfo(sourceData.ID_key).isExist("비밀번호")||
+                datafile.getAccountInfo(sourceData.ID_key).isExist("비번")||
+                datafile.getAccountInfo(sourceData.ID_key).isExist("Password")))
+            {
+                datafile.getAccountInfo(sourceData.ID_key).addKeyPair("비밀번호", "-");
+            }
+
+            accountKeyValueView.ItemsSource = datafile.getAccountInfo(sourceData.ID_key).KeyBundle;
+            accountKeyValueView.Items.Refresh();
+            deselectInfo();
+        }
+
         //키값 추가
         private void AddKeyValue(object sender, RoutedEventArgs e)
         {
@@ -216,15 +241,16 @@ namespace PasswordManagement
         //키값 삭제
         private void deleteKeyPair(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Delete this KeyPair? This can't be undone!",
+            MessageBoxResult result = MessageBox.Show("이 키페어를 삭제하시겠습니까?\n 이 작업은 복구될 수 없습니다!",
     "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result == MessageBoxResult.Yes)
             {
                 EncryptedKeyMap data = (EncryptedKeyMap)accountKeyValueView.SelectedItem;
-                if (data == null) return;
                 AccountInfo sourceData = (AccountInfo)accountListView.SelectedItem;
-                sourceData.deleteKeyPair(data.Id);
-                accountKeyValueView.ItemsSource = sourceData.KeyBundle;
+                if (sourceData == null || data == null) return;
+                datafile.deleteKeyPair(sourceData.ID_key, data.Id);
+
+                accountKeyValueView.ItemsSource = datafile.getAccountInfo(sourceData.ID_key).KeyBundle;
                 accountKeyValueView.Items.Refresh();
                 deselectInfo();
             }

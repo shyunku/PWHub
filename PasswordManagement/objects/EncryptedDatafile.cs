@@ -143,6 +143,13 @@ namespace PasswordManagement
             }
         }
 
+        //계정 키값 추가
+        public void addKeyPair(String accountId, String key, String value)
+        {
+            int index = getIndexOfAccount(accountId);
+            AccountTable[index].addKeyPair(key, value);
+        }
+
         //계정 키값 변경
         public void modifyKeyPair(String accountId, String keyPairId, String key, String value)
         {
@@ -150,9 +157,21 @@ namespace PasswordManagement
             AccountTable[index].modifyKeyPair(keyPairId, key, value);
         }
 
+        //계정 키값 삭제
+        public void deleteKeyPair(String accountId, String keyPairId)
+        {
+            int index = getIndexOfAccount(accountId);
+            AccountTable[index].deleteKeyPair(keyPairId);
+        }
+
         //계정 정보 추가
         public void addAccountInfo(String title)
         {
+            if (isExist(title))
+            {
+                MessageBox.Show("이미 존재하는 타이틀입니다!", "타이틀 중복 오류");
+                return;
+            }
             AccountTable.Insert(0, new AccountInfo(title, 1));
             revalidateIndex();
         }
@@ -242,6 +261,21 @@ namespace PasswordManagement
             }
 
             return -1;
+        }
+
+        private bool isExist(String title)
+        {
+            for (int i = 0; i < accountTable.Count; i++)
+            {
+                AccountInfo cur = accountTable[i];
+                if (cur.InfoTitle.Equals(title))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+
         }
 
         private void swapItem(int i1, int i2)
