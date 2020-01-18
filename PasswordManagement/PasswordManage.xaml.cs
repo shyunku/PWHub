@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace PasswordManagement
 {
@@ -19,6 +21,9 @@ namespace PasswordManagement
         private DatafileManager fileManager;
         private EncryptedDatafile datafile;
         private List<AccountInfo> listItems = new List<AccountInfo>();
+
+        private String previousSelectedAccountId = "@";
+
         public PasswordManage(DatafileManager datafileManager)
         {
             InitializeComponent();
@@ -106,7 +111,12 @@ namespace PasswordManagement
             //계정 키페어 리스트 업데이트
             accountKeyValueView.ItemsSource = sourceData.KeyBundle;
 
-            datafile.viewedInfo(sourceData.ID_key);
+            if(previousSelectedAccountId != sourceData.ID_key)
+            {
+                datafile.viewedInfo(sourceData.ID_key);
+                previousSelectedAccountId = sourceData.ID_key;
+            }
+            
             accountListView.ItemsSource = datafile.AccountTable;
             accountListView.Items.Refresh();
 
@@ -272,6 +282,28 @@ namespace PasswordManagement
                 accountKeyValueView.Items.Refresh();
                 deselectInfo();
             }
+        }
+
+        //키값 클립보드에 복사
+        private void CopyToClipBoard(object sender, RoutedEventArgs e)
+        {
+            DependencyObject obj = (DependencyObject)e.OriginalSource;
+            while(!(obj is ListViewItem))
+            {
+                try
+                {
+                    obj = VisualTreeHelper.GetParent(obj);
+                }
+                catch
+                {
+                    return;
+                }
+            }
+            ListViewItem item = (ListViewItem)obj;
+            EncryptedKeyMap copied = (EncryptedKeyMap)item.Content;
+
+            Clipboard.SetText(copied.Value);
+            //MessageBox.Show("복사했습니다!");
         }
 
         //소스 데이터와 ID로 직접 수정

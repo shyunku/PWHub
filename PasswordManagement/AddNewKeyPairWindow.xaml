@@ -7,8 +7,7 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         SizeToContent="WidthAndHeight"
-        WindowStartupLocation="CenterScreen"
-        Title="새로운 키 이름">
+        WindowStartupLocation="CenterScreen">
     <Grid Margin="15">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />

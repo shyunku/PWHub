@@ -28,6 +28,9 @@ namespace PasswordManagement
             fileManager = manager;
             datafile = fileManager.getCurrentValidDataFile();
             ID_KEY = id;
+
+            AccountInfo accountInfo = datafile.getAccountInfo(ID_KEY);
+            this.Title = "'"+accountInfo.InfoTitle+"' 에 새로운 키페어 추가";
         }
 
         private void cancelThis(object sender, RoutedEventArgs e)
