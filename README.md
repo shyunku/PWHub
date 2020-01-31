@@ -1,6 +1,14 @@
 # PWHub
 
 ## Update History
+### v1.1.0 ~ v1.1.1 - TEST VERSION
+- 프로그램 자체 암호화 방식 변경 및 강화
+- Raw Data Import/Export 기능 추가
+- 기존 암호화 방식 상 존재하던 잠재적 오류 수정
+- Encoding Error fix
+- Main Window Hide되지 않고 계속 Float되는 오류 수정
+- 전체 초기화 버튼 추가 (기능 X)
+
 ### v1.0.0 - alpha
 - 계정 리스트 항목 unfocused된 상태에서 재클릭 시 선택 취소되는데 정보와 버튼 속성이 그대로 남아있는 버그 수정
 
