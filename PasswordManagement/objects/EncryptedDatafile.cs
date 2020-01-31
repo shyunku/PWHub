@@ -8,6 +8,10 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Windows;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
+using PasswordManagement.objects;
+using System.Security.Cryptography;
 
 namespace PasswordManagement
 {
@@ -19,36 +23,100 @@ namespace PasswordManagement
         private const long TRY_LOGIN_TIME_RANGE = 15;
         private const int MAX_LOGIN_TRY_UNIT = 10;
 
-        private String token;
         private String rootPassword;
         private String rootPasswordHint;
         private List<AccountInfo> accountTable;
         private ArrayList accessFailureLog;
 
-        public string Token { get => token; set => token = value; }
-        public string RootPassword { get => rootPassword; set => rootPassword = value; }
+        private StringSecure stringSecure;
+
+        public string RootPassword
+        {
+            get => stringSecure.rsaEncrypt(rootPassword);
+            set
+            {
+                try
+                {
+                    rootPassword = stringSecure.rsaDecrypt(value);
+                }
+                catch (NullReferenceException e)
+                {
+                    //stringSecure가 초기화되지 않아 생기는 문제
+                    //강제 load 후 재시도
+                    forceLoadSecureKey();
+                    try
+                    {
+                        rootPassword = stringSecure.rsaDecrypt(value);
+                    }
+                    catch (CryptographicException e2)
+                    {
+                        MessageBox.Show("암호화 키가 일치하지 않습니다!\n최근에 초기화를 진행했고 기존 키가 남아있다면,\n" +
+                            "키 복구 메뉴를 통해 암호화 키를 복구하십시오.");
+                        //강제 종료 시
+                        throw new StopAllocationException();
+                    }
+                    catch (Exception e2)
+                    {
+                        Console.WriteLine(e2.ToString());
+                    }
+                }
+                catch (CryptographicException e)
+                {
+                    rootPassword = value;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
+            }
+        }
         public List<AccountInfo> AccountTable { get => accountTable; set => accountTable = value; }
         public ArrayList AccessFailureLog { get => accessFailureLog; set => accessFailureLog = value; }
         public string RootPasswordHint { get => rootPasswordHint; set => rootPasswordHint = value; }
 
         //새로운 데이터 파일 생성
-        public EncryptedDatafile()
+        public EncryptedDatafile(StringSecure secureStr)
         {
+            stringSecure = secureStr;
             accessFailureLog = new ArrayList();
             accountTable = new List<AccountInfo>();
-            token = getNewEncryptedToken();
             rootPasswordHint = "";
             registerNewPassword(DEFAULT_ROOT_PW);
         }
 
+        private void forceLoadSecureKey()
+        {
+            try
+            {
+                FileStream fileStream = new FileStream(DatafileManager.SECURE_KEY_STORAGE_NAME, FileMode.Open);
+                BinaryReader reader = new BinaryReader(fileStream, Encoding.Default);
+                String buffer = reader.ReadString();
+                String decrypted = StringSecure.decodeBase64(buffer);
+                reader.Close();
+                fileStream.Close();
+                Utils.log("Secure Key force-loaded!");
+                SecureKeyPair loadedSecureKey = JsonConvert.DeserializeObject<SecureKeyPair>(decrypted);
+                stringSecure = new StringSecure(loadedSecureKey);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
         public void registerNewPassword(String newPW)
         {
-            rootPassword = StringSecure.encryptPassword(newPW);
+            rootPassword = newPW;
         }
 
         public void registerNewPasswordHint(String newHint)
         {
             rootPasswordHint = newHint;
+        }
+
+        public void setStringSecureProperty(StringSecure stringSecure)
+        {
+            this.stringSecure = stringSecure;
         }
 
         public String getNextAvailableLoginText()
@@ -89,9 +157,9 @@ namespace PasswordManagement
             return MAX_LOGIN_TRY_UNIT - tryFailure;
         }
 
-        public String getDecryptedRootPassword()
+        public String getPureRootPassword()
         {
-            return StringSecure.decryptPassword(this.RootPassword);
+            return rootPassword;
         }
 
         public void viewedInfo(String id_key)
@@ -112,7 +180,7 @@ namespace PasswordManagement
 
         public bool isCorrectPassword(String inputPW)
         {
-            if(getDecryptedRootPassword() == inputPW)
+            if(getPureRootPassword() == inputPW)
             {
                 return true;
             }
@@ -292,6 +360,27 @@ namespace PasswordManagement
             GuidString = GuidString.Replace("=", "");
             GuidString = GuidString.Replace("+", "");
             return GuidString;
+        }
+
+        public RawDatafile convertToRawData()
+        {
+            try
+            {
+                RawDatafile newData = new RawDatafile
+                {
+                    rRootPassword = StringSecure.encodeBase64(getPureRootPassword()),
+                    rRootPasswordHint = RootPasswordHint,
+                    rAccountTable = AccountTable,
+                    rAccessFailureLog = AccessFailureLog
+                };
+
+                return newData;
+            }
+            catch(StopAllocationException e)
+            {
+            }
+
+            throw new Exception();
         }
     }
 }

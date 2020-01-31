@@ -107,7 +107,6 @@ namespace PasswordManagement
             accountListView.Items.Refresh();
 
             //재선택으로 취소된 경우 고려
-            Console.WriteLine(accountListView.SelectedIndex);
             if (accountListView.SelectedIndex == -1)
             {
                 deselect();
@@ -131,7 +130,6 @@ namespace PasswordManagement
             selectedInitialAdditionTimestamp.Content = sourceData.InitialAdditionTimestamp;
             selectedRecentUpdateTimestamp.Content = sourceData.RecentModifiedTimestamp;
             selectedViewCount.Content = sourceData.ViewCount + " 회";
-            Console.WriteLine(accountListView.SelectedIndex);
 
             infoItemUnselected();
         }
@@ -347,7 +345,7 @@ namespace PasswordManagement
         //초기 데이터 업데이트
         private void updateData()
         {
-            fileManager.loadFile();
+            fileManager.loadFiles();
             datafile = fileManager.getCurrentValidDataFile();
         }
 
@@ -358,11 +356,12 @@ namespace PasswordManagement
             Environment.Exit(0);
         }
 
-        private void ExportWholeData(object sender, RoutedEventArgs e)
+        //암호화된 상태로 내보내기
+        private void ExportWholeDataAsEncrypted(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Title = "데이터 파일 내보내기";
-            saveFileDialog.Filter = "Data Files (*.dat)|*.dat";
+            saveFileDialog.Title = "데이터 파일 암호화 상태로 내보내기";
+            saveFileDialog.Filter = "Data Files (*." + DatafileManager.ENCODED_FILE_EXTENSION + ")|*." + DatafileManager.ENCODED_FILE_EXTENSION + "";
             saveFileDialog.ShowDialog();
             
             if(saveFileDialog.FileName != "")
@@ -371,12 +370,26 @@ namespace PasswordManagement
             }
         }
 
-        private void ImportToOverwriteData(object sender, RoutedEventArgs e)
+        //비암호화 상태로 내보내기
+        private void ExportWholeDataAsDecrypted(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Title = "데이터 파일 비암호화 상태로 내보내기 (not recommended)";
+            saveFileDialog.Filter = "Data Files (*." + DatafileManager.DECODED_FILE_EXTENSION + ")|*." + DatafileManager.DECODED_FILE_EXTENSION;
+            saveFileDialog.ShowDialog();
+
+            if (saveFileDialog.FileName != "")
+            {
+                fileManager.saveFileAsRaw(saveFileDialog.FileName);
+            }
+        }
+
+        //암호화 데이터로 덮어쓰기
+        private void ImportToOverwriteEncryptedData(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Title = "새로운 데이터로 기존 파일 덮어쓰기";
-            openFileDialog.Filter = "Data Files (*.dat)|*.dat";
-            openFileDialog.ShowDialog();
+            openFileDialog.Title = "새로운 암호화 데이터로 기존 파일 덮어쓰기";
+            openFileDialog.Filter = "Data Files (*." + DatafileManager.ENCODED_FILE_EXTENSION + ")|*." + DatafileManager.ENCODED_FILE_EXTENSION;            openFileDialog.ShowDialog();
 
             if(openFileDialog.FileName != "")
             {
@@ -393,6 +406,29 @@ namespace PasswordManagement
             }
         }
 
+        //비암호화 데이터로 덮어쓰기
+        private void ImportToOverwriteDecryptedData(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "새로운 비암호화 데이터로 기존 파일 덮어쓰기";
+            openFileDialog.Filter = "Data Files (*."+DatafileManager.DECODED_FILE_EXTENSION+ ")|*." + DatafileManager.DECODED_FILE_EXTENSION;
+            openFileDialog.ShowDialog();
+
+            if (openFileDialog.FileName != "")
+            {
+                MessageBoxResult result = MessageBox.Show("새로운 데이터로 덮어쓰시겠습니까?\n기존 데이터는 복구할 수 없습니다!",
+                    "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.Yes)
+                {
+                    fileManager.importRawData(openFileDialog.FileName);
+                    updateData();
+                    accountListView.ItemsSource = datafile.AccountTable;
+                    accountListView.Items.Refresh();
+                    itemUnselected();
+                }
+            }
+        }
+
         private void ResetRootPassword(object sender, RoutedEventArgs e)
         {
             this.Hide();
@@ -400,5 +436,10 @@ namespace PasswordManagement
             rootPasswordSetting.ShowDialog();
         }
 
+        //전체 초기화
+        private void initializeAll(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
