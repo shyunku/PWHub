@@ -74,7 +74,9 @@ namespace PasswordManagement
             byte[] randBytes = new byte[keyLength];
             provider.GetBytes(randBytes);
 
-            return Convert.ToBase64String(randBytes);
+            String key = Convert.ToBase64String(randBytes);
+
+            return key;
         }
         public static void getPasswordSecurity(String password, Label label, Button confirm)
         {

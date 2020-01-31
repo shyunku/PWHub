@@ -1,6 +1,9 @@
 # PWHub
 
 ## Update History
+### v1.1.2
+- Raw Data Import/Export 시 Root 비밀번호 및 힌트 제거
+
 ### v1.1.0 ~ v1.1.1 - TEST VERSION
 - 프로그램 자체 암호화 방식 변경 및 강화
 - Raw Data Import/Export 기능 추가

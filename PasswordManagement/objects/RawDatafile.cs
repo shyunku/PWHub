@@ -9,13 +9,9 @@ namespace PasswordManagement.objects
 {
     public class RawDatafile
     {
-        private String rootPassword;
-        private String rootPasswordHint;
         private List<AccountInfo> accountTable;
         private ArrayList accessFailureLog;
 
-        public string rRootPassword { get => rootPassword; set => rootPassword = value; }
-        public string rRootPasswordHint { get => rootPasswordHint; set => rootPasswordHint = value; }
         public List<AccountInfo> rAccountTable { get => accountTable; set => accountTable = value; }
         public ArrayList rAccessFailureLog { get => accessFailureLog; set => accessFailureLog = value; }
 
@@ -23,8 +19,6 @@ namespace PasswordManagement.objects
         {
             EncryptedDatafile newData = new EncryptedDatafile(stringSecure)
             {
-                RootPassword = StringSecure.decodeBase64(rRootPassword),
-                RootPasswordHint = rRootPasswordHint,
                 AccountTable = rAccountTable,
                 AccessFailureLog = rAccessFailureLog
             };

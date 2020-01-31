@@ -368,8 +368,6 @@ namespace PasswordManagement
             {
                 RawDatafile newData = new RawDatafile
                 {
-                    rRootPassword = StringSecure.encodeBase64(getPureRootPassword()),
-                    rRootPasswordHint = RootPasswordHint,
                     rAccountTable = AccountTable,
                     rAccessFailureLog = AccessFailureLog
                 };
