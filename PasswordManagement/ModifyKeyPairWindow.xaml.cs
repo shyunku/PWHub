@@ -34,7 +34,7 @@ namespace PasswordManagement
 
             EncryptedKeyMap keyInfo = datafile.getAccountInfo(accountId).getEncryptedKeyMapById(keyPairId);
             newKeyName.Text = keyInfo.KeyTitle;
-            newKeyValue.Text = keyInfo.Value;
+            newKeyValue.Text = keyInfo.PureValue;
         }
 
         private void cancelThis(object sender, RoutedEventArgs e)

@@ -14,7 +14,7 @@ namespace PasswordManagement
             allocatedKeyPair = secureKeyPair;
         }
 
-        //JSON 형식 파일 전체 암호화
+        //RSA 암호화
         public String rsaEncrypt(String str)
         {
             return encryptRSA(str);
@@ -23,6 +23,17 @@ namespace PasswordManagement
         {
             return decryptRSA(str);
         }
+
+        //AES 암호화
+        public String aesEncrypt(String str)
+        {
+            return encryptAES(str);
+        }
+        public String aesDecrypt(String str)
+        {
+            return decryptAES(str);
+        }
+
 
         public static String encodeBase64(String str)
         {

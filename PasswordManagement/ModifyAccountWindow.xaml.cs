@@ -22,12 +22,20 @@ namespace PasswordManagement
         private DatafileManager fileManager;
         private EncryptedDatafile datafile;
         private String itemID = "?";
+
         public ModifyAccountWindow(DatafileManager manager, String id)
         {
             InitializeComponent();
             fileManager = manager;
             datafile = fileManager.getCurrentValidDataFile();
+            AccountInfo account = datafile.getAccountInfo(id);
+            lblQuestion.Content = formatTitle(account.InfoTitle);
             itemID = id;
+        }
+
+        private String formatTitle(String title)
+        {
+            return "[" + title + "] 의 새로운 계정 이름을 입력해주세요.";
         }
 
         private void cancelThis(object sender, RoutedEventArgs e)

@@ -19,6 +19,8 @@ namespace PasswordManagement
         private String id_key;
         private int index;
 
+        private StringSecure stringSecure;
+
         public int ViewCount { get => viewCount; set => viewCount = value; }
         public string InfoTitle { get => infoTitle; set => infoTitle = value; }
         public string ID_key { get => id_key; set => id_key = value; }
@@ -27,7 +29,7 @@ namespace PasswordManagement
         public List<EncryptedKeyMap> KeyBundle { get => keyBundle; set => keyBundle = value; }
         public int Index { get => index; set => index = value; }
 
-        public AccountInfo(String infoTitle, int index)
+        public AccountInfo(String infoTitle, int index, StringSecure stringSecure)
         {
             this.KeyBundle = new List<EncryptedKeyMap>();
             this.InfoTitle = infoTitle;
@@ -36,6 +38,8 @@ namespace PasswordManagement
             this.ID_key = Utils.getRandomKey();
             this.ViewCount = 0;
             this.Index = index;
+
+            this.stringSecure = stringSecure;
         }
 
         //Add, Delete, Move 시 호출
@@ -54,7 +58,7 @@ namespace PasswordManagement
                 MessageBox.Show("해당 키 이름은 사용 중입니다!", "키 중복 오류");
                 return;
             }
-            keyBundle.Add(new EncryptedKeyMap(key, value, keyBundle.Count+1));
+            keyBundle.Add(new EncryptedKeyMap(key, value, keyBundle.Count+1, stringSecure));
             revalidateIndex();
         }
 

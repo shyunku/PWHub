@@ -94,7 +94,7 @@ namespace PasswordManagement
                 String decrypted = StringSecure.decodeBase64(buffer);
                 reader.Close();
                 fileStream.Close();
-                Utils.log("Secure Key force-loaded!");
+                //Utils.log("Secure Key force-loaded!");
                 SecureKeyPair loadedSecureKey = JsonConvert.DeserializeObject<SecureKeyPair>(decrypted);
                 stringSecure = new StringSecure(loadedSecureKey);
             }
@@ -240,7 +240,7 @@ namespace PasswordManagement
                 MessageBox.Show("이미 존재하는 타이틀입니다!", "타이틀 중복 오류");
                 return;
             }
-            AccountTable.Insert(0, new AccountInfo(title, 1));
+            AccountTable.Insert(0, new AccountInfo(title, 1, stringSecure));
             revalidateIndex();
         }
 
