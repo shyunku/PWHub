@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PasswordManagement.objects
 {
-    class RawKeyMap
+    public class RawKeyMap
     {
         private String keyTitle;
         private String value_;
@@ -18,5 +18,17 @@ namespace PasswordManagement.objects
         public int rIndex { get => index; set => index = value; }
         public string rId { get => id; set => id = value; }
 
+        public EncryptedKeyMap convertToEncryptedKeyMap()
+        {
+            EncryptedKeyMap encryptedKeyMap = new EncryptedKeyMap()
+            {
+                KeyTitle = rKeyTitle,
+                PureValue = rValue_,
+                Index = rIndex,
+                Id = rId,
+            };
+
+            return encryptedKeyMap;
+        }
     }
 }

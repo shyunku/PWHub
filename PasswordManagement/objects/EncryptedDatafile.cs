@@ -119,6 +119,11 @@ namespace PasswordManagement
             this.stringSecure = stringSecure;
         }
 
+        public void setNewAccountTable(List<AccountInfo> accountInfos)
+        {
+            this.AccountTable = accountInfos;
+        }
+
         public String getNextAvailableLoginText()
         {
             long currentTime = Utils.getCurrentTimeMillis();
@@ -186,6 +191,11 @@ namespace PasswordManagement
             }
             accessFailure();
             return false;
+        }
+
+        public void setRootPassword(String rootPW)
+        {
+            this.rootPassword = rootPW;
         }
 
         //Add, Delete, Move 시 호출
@@ -364,11 +374,17 @@ namespace PasswordManagement
 
         public RawDatafile convertToRawData()
         {
+            List<RawAccountInfo> rawAccounts = new List<RawAccountInfo>();
+            for(int i=0;i<accountTable.Count;i++)
+            {
+                rawAccounts.Add(accountTable[i].convertToRawAccountInfo());
+            }
+
             try
             {
                 RawDatafile newData = new RawDatafile
                 {
-                    rAccountTable = AccountTable,
+                    rRawAccountTable = rawAccounts,
                     rAccessFailureLog = AccessFailureLog
                 };
 

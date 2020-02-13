@@ -42,6 +42,12 @@ namespace PasswordManagement
             return this.datafile;
         }
 
+        public void setDataFileExceptPassword(EncryptedDatafile encryptedDatafile)
+        {
+            //키페어 리스트만 저장
+            datafile.setNewAccountTable(encryptedDatafile.AccountTable);
+        }
+
 
         public void saveFile()
         {
@@ -164,7 +170,22 @@ namespace PasswordManagement
                 reader.Close();
                 fileStream.Close();
                 Utils.log("Data loaded from "+filepathName);
-                this.datafile = JsonConvert.DeserializeObject<EncryptedDatafile>(decrypted);
+                EncryptedDatafile newDatafile = JsonConvert.DeserializeObject<EncryptedDatafile>(decrypted);
+                //비밀번호 덮어씌워짐 방지 -> 체크
+                if (!datafile.getPureRootPassword().Equals(newDatafile.getPureRootPassword()))
+                {
+                    //서로 다른 비밀번호의 데이터 파일 import 시 비번 묻기
+                    RequireImportedDataPWWindow requirePWWindow = new RequireImportedDataPWWindow(newDatafile.getPureRootPassword());
+                    bool? result = requirePWWindow.ShowDialog();
+                    if (result == true)
+                    {
+                        setDataFileExceptPassword(newDatafile);
+                    }
+                }
+                else
+                {
+                    this.datafile = newDatafile;
+                }
                 saveFile();
             }
             catch (Exception e)

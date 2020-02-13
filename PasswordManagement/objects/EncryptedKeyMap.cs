@@ -78,6 +78,7 @@ namespace PasswordManagement
         public string PureValue
         {
             get => value_;
+            set => value_ = value;
         }
 
         public EncryptedKeyMap(String key, String value, int index, StringSecure stringSecure)
@@ -88,6 +89,20 @@ namespace PasswordManagement
             this.Id = Utils.getRandomKey();
 
             this.stringSecure = stringSecure;
+        }
+
+        public EncryptedKeyMap()
+        {
+            //raw data import
+        }
+
+        public EncryptedKeyMap(String key, String value, int index, String id)
+        {
+            //raw data import 후 변환 용도
+            this.KeyTitle = key;
+            this.Value = value;
+            this.Index = index;
+            this.Id = id;
         }
 
         private void forceLoadSecureKey()
@@ -108,6 +123,19 @@ namespace PasswordManagement
             {
                 Console.WriteLine(e.ToString());
             }
+        }
+
+        public RawKeyMap convertToRawKeyMap()
+        {
+            RawKeyMap rawKeyMap = new RawKeyMap
+            {
+                rKeyTitle = keyTitle,
+                rValue_ = PureValue,
+                rIndex = index,
+                rId = id
+            };
+
+            return rawKeyMap;
         }
     }
 }

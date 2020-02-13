@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Collections;
 using Newtonsoft.Json;
 using System.Windows;
+using PasswordManagement.objects;
 
 namespace PasswordManagement
 {
@@ -40,6 +41,11 @@ namespace PasswordManagement
             this.Index = index;
 
             this.stringSecure = stringSecure;
+        }
+
+        public AccountInfo()
+        {
+            //raw data import
         }
 
         //Add, Delete, Move 시 호출
@@ -110,7 +116,6 @@ namespace PasswordManagement
             }
 
             return false;
-
         }
 
         public void viewed()
@@ -121,6 +126,26 @@ namespace PasswordManagement
         public void modified()
         {
             this.RecentModifiedTimestamp = Utils.getCurrentFormattedTimeString();
+        }
+
+        public RawAccountInfo convertToRawAccountInfo()
+        {
+            List<RawKeyMap> rawKeyBundle = new List<RawKeyMap>();
+            for (int i = 0; i < keyBundle.Count; i++)
+                rawKeyBundle.Add(keyBundle[i].convertToRawKeyMap());
+
+            RawAccountInfo rawAccountInfo = new RawAccountInfo()
+            {
+                rViewCount = viewCount,
+                rInfoTitle = infoTitle,
+                rID_key = id_key,
+                rInitialAdditionTimestamp = initialAdditionTimestamp,
+                rRecentModifiedTimestamp = recentModifiedTimestamp,
+                rKeyBundle = rawKeyBundle,
+                rIndex = index
+            };
+
+            return rawAccountInfo;
         }
     }
 }
