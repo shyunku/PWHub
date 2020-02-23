@@ -43,38 +43,13 @@ namespace PasswordManagement
             }
             set
             {
-                try
-                {
-                    value_ = stringSecure.aesDecrypt(value);
-                }
-                catch (NullReferenceException e)
-                {
-                    //강제 load 후 재시도
-                    forceLoadSecureKey();
-                    try
-                    {
-                        value_ = stringSecure.aesDecrypt(value);
-                    }
-                    catch (Exception e2)
-                    {
-                        if(e2 is FormatException || e2 is CryptographicException)
-                        {
-                            value_ = value;
-                            return;
-                        }
-
-                        throw;
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.ToString());
-                }
+                value_ = value;
             }
         }
         public int Index { get => index; set => index = value; }
         public string Id { get => id; set => id = value; }
 
+        [JsonIgnore]
         public string PureValue
         {
             get => value_;

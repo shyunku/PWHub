@@ -30,49 +30,10 @@ namespace PasswordManagement
 
         private StringSecure stringSecure;
 
-        public string RootPassword
-        {
-            get => stringSecure.rsaEncrypt(rootPassword);
-            set
-            {
-                try
-                {
-                    rootPassword = stringSecure.rsaDecrypt(value);
-                }
-                catch (NullReferenceException e)
-                {
-                    //stringSecure가 초기화되지 않아 생기는 문제
-                    //강제 load 후 재시도
-                    forceLoadSecureKey();
-                    try
-                    {
-                        rootPassword = stringSecure.rsaDecrypt(value);
-                    }
-                    catch (CryptographicException e2)
-                    {
-                        MessageBox.Show("암호화 키가 일치하지 않습니다!\n최근에 초기화를 진행했고 기존 키가 남아있다면,\n" +
-                            "키 복구 메뉴를 통해 암호화 키를 복구하십시오.");
-                        //강제 종료 시
-                        throw new StopAllocationException();
-                    }
-                    catch (Exception e2)
-                    {
-                        Console.WriteLine(e2.ToString());
-                    }
-                }
-                catch (CryptographicException e)
-                {
-                    rootPassword = value;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.ToString());
-                }
-            }
-        }
         public List<AccountInfo> AccountTable { get => accountTable; set => accountTable = value; }
         public ArrayList AccessFailureLog { get => accessFailureLog; set => accessFailureLog = value; }
         public string RootPasswordHint { get => rootPasswordHint; set => rootPasswordHint = value; }
+        public string RootPassword { get => rootPassword; set => rootPassword = value; }
 
         //새로운 데이터 파일 생성
         public EncryptedDatafile(StringSecure secureStr)
@@ -106,7 +67,16 @@ namespace PasswordManagement
 
         public void registerNewPassword(String newPW)
         {
-            rootPassword = newPW;
+            try
+            {
+                rootPassword = StringSecure.encodeSHA256(newPW);
+            }
+            catch(Exception e)
+            {
+                //재시도
+                forceLoadSecureKey();
+                rootPassword = StringSecure.encodeSHA256(newPW);
+            }
         }
 
         public void registerNewPasswordHint(String newHint)
@@ -185,7 +155,7 @@ namespace PasswordManagement
 
         public bool isCorrectPassword(String inputPW)
         {
-            if(getPureRootPassword() == inputPW)
+            if(getPureRootPassword().Equals(StringSecure.encodeSHA256(inputPW)))
             {
                 return true;
             }

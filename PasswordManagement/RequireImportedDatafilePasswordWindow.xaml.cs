@@ -34,7 +34,7 @@ namespace PasswordManagement
 
         private void finallyCheckPassword(object sender, RoutedEventArgs e)
         {
-            String inputPW = importedFilePassword.Password;
+            String inputPW = StringSecure.encodeSHA256(importedFilePassword.Password);
             if (!inputPW.Equals(importedPW))
             {
                 MessageBox.Show("비밀번호가 일치하지 않습니다!", "비밀번호 불일치");

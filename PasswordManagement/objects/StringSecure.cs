@@ -1,4 +1,5 @@
-﻿using PasswordManagement.objects;
+﻿
+using PasswordManagement.objects;
 using System;
 using System.Security.Cryptography;
 using System.Text;
@@ -34,6 +35,18 @@ namespace PasswordManagement
             return decryptAES(str);
         }
 
+        public static String encodeSHA256(String str)
+        {
+            SHA256 shaHash = SHA256.Create();
+            byte[] bytes = shaHash.ComputeHash(Encoding.UTF8.GetBytes(str));
+            StringBuilder strBuilder = new StringBuilder();
+            for(int i = 0; i < bytes.Length; i++)
+            {
+                strBuilder.Append(bytes[i].ToString("x2"));
+            }
+
+            return strBuilder.ToString();
+        }
 
         public static String encodeBase64(String str)
         {
