@@ -43,7 +43,32 @@ namespace PasswordManagement
             }
             set
             {
-                value_ = value;
+                try
+                {
+                    //일단 AES로 복호화 시도
+                    value_ = stringSecure.aesDecrypt(value);
+                }
+                catch (NullReferenceException e)
+                {
+                    //stringsecure가 null
+                    //강제 load 후 재시도
+                    forceLoadSecureKey();
+                    try
+                    {
+                        value_ = stringSecure.aesDecrypt(value);
+                    }
+                    catch (Exception e2)
+                    {
+                        if(e2 is FormatException || e2 is CryptographicException)
+                        {
+                            value_ = value;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
             }
         }
         public int Index { get => index; set => index = value; }
