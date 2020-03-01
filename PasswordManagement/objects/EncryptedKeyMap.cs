@@ -63,11 +63,22 @@ namespace PasswordManagement
                         {
                             value_ = value;
                         }
+                        else
+                        {
+                            Console.WriteLine(e.ToString());
+                        }
                     }
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.ToString());
+                    if (e is FormatException || e is CryptographicException)
+                    {
+                        value_ = value;
+                    }
+                    else
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
                 }
             }
         }
