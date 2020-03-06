@@ -307,7 +307,7 @@ namespace PasswordManagement
             ListViewItem item = (ListViewItem)obj;
             EncryptedKeyMap copied = (EncryptedKeyMap)item.Content;
 
-            Clipboard.SetText(copied.Value);
+            Clipboard.SetText(copied.PureValue);
             //MessageBox.Show("복사했습니다!");
         }
 
